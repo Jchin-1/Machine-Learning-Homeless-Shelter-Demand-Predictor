@@ -58,5 +58,4 @@ Thumbs.db
 .DS_Store
 
 # Large files
-*.joblib
 Data/
