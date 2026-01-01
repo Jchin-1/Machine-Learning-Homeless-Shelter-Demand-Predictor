@@ -54,9 +54,6 @@ logs/
 Thumbs.db
 .DS_Store
 
-# Data folder (optional - comment out if you want to include it)
-Data/
-
 # Temporary files
 *.tmp
 *.temp
