@@ -7,8 +7,14 @@ import json
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
-import matplotlib.pyplot as plt
-import seaborn as sns
+
+# Optional visualization imports
+try:
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    HAS_MATPLOTLIB = True
+except ImportError:
+    HAS_MATPLOTLIB = False
 
 # --- Data Access and Loading ---
 # Define the base path to the shelter data using local folder
