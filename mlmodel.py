@@ -17,36 +17,65 @@ except ImportError:
     HAS_MATPLOTLIB = False
 
 # --- Data Access and Loading ---
-# Define the base path to the shelter data using local folder
+# Define the base path relative to this script's location
 BASE_DIR = Path(__file__).parent
 base_data_path = BASE_DIR / 'Data'
 
-# Construct full paths to each CSV file using the exact filenames found
-df_occupancy_path = base_data_path / 'Daily Shelter & Overnight Service Occupancy & Capacity' / 'Daily shelter overnight occupancy.csv'
-df_flow_path = base_data_path / 'Toronto Shelter System Flow' / 'toronto-shelter-system-flow.csv'
-df_intake_path = base_data_path / 'Central Intake calls' / 'Central Intake Call Wrap-Up Codes Data.csv'
+# Construct full paths to each data folder
+weather_path = base_data_path / 'Daily Data Report Toronto City Weather'
+occupancy_path = base_data_path / 'Daily Shelter & Overnight Service Occupancy & Capacity'
+flow_path = base_data_path / 'Toronto Shelter System Flow'
+intake_path = base_data_path / 'Central Intake calls'
 
-# Load all available weather files and concatenate
-weather_files = [
-    base_data_path / 'Daily Data Report Toronto City Weather' / 'en_climate_daily_ON_6158355_2021_P1D.csv',
-    base_data_path / 'Daily Data Report Toronto City Weather' / 'en_climate_daily_ON_6158355_2022_P1D.csv',
-    base_data_path / 'Daily Data Report Toronto City Weather' / 'en_climate_daily_ON_6158355_2023_P1D.csv',
-    base_data_path / 'Daily Data Report Toronto City Weather' / 'en_climate_daily_ON_6158355_2024_P1D.csv',
-    base_data_path / 'Daily Data Report Toronto City Weather' / 'en_climate_daily_ON_6158355_2025_P1D.csv'
-]
+# Debug: Print where we're looking for files
+print(f"Looking for files in: {weather_path.resolve()}")
+
+# Check if weather path exists
+if not weather_path.exists():
+    print(f"⚠ Warning: Weather data path not found: {weather_path}")
+    print(f"Contents of {base_data_path}:")
+    if base_data_path.exists():
+        for item in sorted(base_data_path.iterdir()):
+            print(f"  - {item.name}")
+    else:
+        print(f"  ✗ Data folder doesn't exist: {base_data_path}")
+
+# Load all available weather files dynamically
+weather_files = sorted(weather_path.glob('*.csv')) if weather_path.exists() else []
+print(f"Found {len(weather_files)} weather CSV file(s)")
 
 weather_dfs = []
 for file in weather_files:
     try:
+        print(f"  Loading: {file.name}")
         weather_dfs.append(pd.read_csv(str(file)))
-    except FileNotFoundError:
-        print(f"Warning: Weather file not found: {file}")
+    except Exception as e:
+        print(f"  Warning: Could not load {file.name}: {e}")
+
+# Check if we found any weather data
+if not weather_dfs:
+    raise ValueError(f"No CSV files found in {weather_path.resolve()}. "
+                     f"Please ensure weather data files are in the correct location.")
+
 df_weather = pd.concat(weather_dfs, ignore_index=True)
+print(f"[OK] Loaded weather data: {len(df_weather)} rows")
 
 # Load other dataframes
-df_occupancy = pd.read_csv(str(df_occupancy_path))
-df_flow = pd.read_csv(str(df_flow_path))
-df_intake = pd.read_csv(str(df_intake_path))
+occupancy_file = occupancy_path / 'Daily shelter overnight occupancy.csv'
+flow_file = flow_path / 'toronto-shelter-system-flow.csv'
+intake_file = intake_path / 'Central Intake Call Wrap-Up Codes Data.csv'
+
+print(f"Loading occupancy data from: {occupancy_file.name}")
+df_occupancy = pd.read_csv(str(occupancy_file))
+print(f"[OK] Loaded occupancy data: {len(df_occupancy)} rows")
+
+print(f"Loading flow data from: {flow_file.name}")
+df_flow = pd.read_csv(str(flow_file))
+print(f"[OK] Loaded flow data: {len(df_flow)} rows")
+
+print(f"Loading intake data from: {intake_file.name}")
+df_intake = pd.read_csv(str(intake_file))
+print(f"[OK] Loaded intake data: {len(df_intake)} rows")
 
 # --- Data Merging and Preprocessing ---
 # 1. Convert and rename date columns to 'DATE'
