@@ -23,16 +23,45 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 BASE_DIR = Path(__file__).parent.parent
 MODEL_PATH = BASE_DIR / 'shelter_demand_model.joblib'
 
+# Train model if it doesn't exist
+def train_model_if_needed():
+    """Train model on startup if model file doesn't exist"""
+    if not MODEL_PATH.exists():
+        print("⏳ Model not found. Training model (this may take 1-2 minutes)...")
+        import sys
+        import subprocess
+        
+        # Run the mlmodel.py script
+        result = subprocess.run(
+            [sys.executable, str(BASE_DIR / 'mlmodel.py')],
+            cwd=str(BASE_DIR),
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            print(f"✗ Model training failed: {result.stderr}")
+            raise RuntimeError(f"Failed to train model: {result.stderr}")
+        print("✓ Model trained successfully")
+
 # Load model
-try:
-    loaded_model_pipeline = joblib.load(str(MODEL_PATH))
-    model = loaded_model_pipeline['model']
-    feature_columns = loaded_model_pipeline['feature_columns']
-    X_numeric_mean = loaded_model_pipeline['X_numeric_mean']
-    print("✓ Model loaded successfully")
-except Exception as e:
-    print(f"✗ Error loading model: {e}")
-    raise
+def load_model():
+    """Load the trained model"""
+    train_model_if_needed()
+    
+    try:
+        loaded_model_pipeline = joblib.load(str(MODEL_PATH))
+        model = loaded_model_pipeline['model']
+        feature_columns = loaded_model_pipeline['feature_columns']
+        X_numeric_mean = loaded_model_pipeline['X_numeric_mean']
+        print("✓ Model loaded successfully")
+        return model, feature_columns, X_numeric_mean
+    except Exception as e:
+        print(f"✗ Error loading model: {e}")
+        raise
+
+# Load model at startup
+model, feature_columns, X_numeric_mean = load_model()
 
 # Define request/response models
 class PredictionRequest(BaseModel):
