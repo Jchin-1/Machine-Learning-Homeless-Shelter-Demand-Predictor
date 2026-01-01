@@ -20,6 +20,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy all project files into the container
 COPY . .
 
+# DEBUG: List all files and directories to troubleshoot missing Data folder
+RUN echo "--- FILE LISTING START ---" && ls -laR /app && echo "--- FILE LISTING END ---"
+
 # CRUCIAL: Train the model during build using the correct NumPy version
 # This re-pickles the model with the right dependencies
 RUN python mlmodel.py
