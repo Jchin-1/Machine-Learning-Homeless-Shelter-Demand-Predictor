@@ -398,20 +398,45 @@ python web_app/test_api.py
 
 ## 🚀 Deployment
 
+### Deploy to Render.com (Recommended)
+
+1. **Ensure files are pushed to GitHub** (already done ✓)
+
+2. **On Render.com dashboard**:
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repository
+   - Select: `Machine-Learning-Homeless-Shelter-Demand-Predictor`
+
+3. **Configure deployment settings**:
+   - **Name**: `shelter-demand-predictor` (or your choice)
+   - **Runtime**: Python 3.13
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `cd web_app && uvicorn main:app --host 0.0.0.0 --port 8000`
+
+4. **Click Deploy**
+   - Wait 2-5 minutes for deployment
+   - Your app will be live at: `https://shelter-demand-predictor.onrender.com`
+
 ### Docker
+
 ```bash
 docker build -t shelter-predictor .
 docker run -p 8000:8000 shelter-predictor
 ```
 
 ### Cloud Platforms
+- **Render**: ✅ Recommended (free tier available)
 - **Heroku**: Compatible with Python buildpack
 - **AWS**: Lambda, EC2, or ECS
-- **Google Cloud**: Cloud Run (recommended)
+- **Google Cloud**: Cloud Run (serverless)
 - **Azure**: App Service or Container Instances
 
+### Environment Variables
+
+No environment variables required for basic deployment.
+
 ### Production Considerations
-- Enable HTTPS/SSL
+- Enable HTTPS/SSL (Render handles this automatically)
 - Set up rate limiting
 - Add authentication
 - Configure logging
