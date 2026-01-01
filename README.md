@@ -410,7 +410,7 @@ python web_app/test_api.py
 3. **Configure deployment settings**:
    - **Name**: `shelter-demand-predictor` (or your choice)
    - **Runtime**: Python 3.13
-   - **Build Command**: `pip install -r requirements.txt`
+   - **Build Command**: `pip install -r requirements.txt && python mlmodel.py`
    - **Start Command**: `cd web_app && uvicorn main:app --host 0.0.0.0 --port 8000`
 
 4. **Click Deploy**
