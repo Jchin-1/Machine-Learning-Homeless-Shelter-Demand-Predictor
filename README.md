@@ -410,12 +410,16 @@ python web_app/test_api.py
 3. **Configure deployment settings**:
    - **Name**: `shelter-demand-predictor` (or your choice)
    - **Runtime**: Python 3.13
-   - **Build Command**: `pip install -r requirements.txt && python mlmodel.py`
+   - **Build Command**: `pip install -r requirements.txt`
    - **Start Command**: `cd web_app && uvicorn main:app --host 0.0.0.0 --port 8000`
+   - **Environment Variables**: (none required)
 
 4. **Click Deploy**
    - Wait 2-5 minutes for deployment
+   - The app will automatically load the pre-trained model
    - Your app will be live at: `https://shelter-demand-predictor.onrender.com`
+
+**Note**: The pre-trained model (`shelter_demand_model.joblib`) is committed to GitHub, so no model training is needed during deployment.
 
 ### Docker
 
