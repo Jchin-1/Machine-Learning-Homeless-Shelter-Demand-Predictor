@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: shelter-demand-predictor
+    runtime: docker
+    region: ohio
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"

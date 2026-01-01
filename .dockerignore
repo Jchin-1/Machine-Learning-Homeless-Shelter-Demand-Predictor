@@ -1,0 +1,68 @@
+# Virtual environments
+venv/
+.venv/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Package files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Old model files (force rebuild with correct NumPy)
+*.joblib
+*.pkl
+*.pickle
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+
+# Cache
+.cache/
+.pytest_cache/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Data folder (optional - comment out if you want to include it)
+Data/
+
+# Temporary files
+*.tmp
+*.temp
+GITHUB_PUSH_SUMMARY.*
+GIT_PUSH_COMPLETE.txt
+README_CREATION_COMPLETE.txt
+INSTALLATION_COMPLETE.txt
+PROJECT_SUMMARY.md
+QUICK_START.md

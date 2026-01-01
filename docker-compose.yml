@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  shelter-predictor:
+    build: .
+    ports:
+      - "8000:80"
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
