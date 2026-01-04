@@ -17,11 +17,28 @@ RUN pip install --no-cache-dir "numpy<2.0.0"
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all project files into the container
+# Explicitly copy the Data folder (try uppercase first, then fallback to lowercase)
+# NOTE: If your local folder is named "data" (lowercase), the uppercase COPY will fail
+# and we'll try the lowercase version as a fallback
+COPY Data /app/Data || true
+# Alternative: if data folder is lowercase, uncomment this line:
+# COPY data /app/Data || true
+
+# Copy all other project files into the container
 COPY . .
 
-# DEBUG: List all files and directories to troubleshoot missing Data folder
-RUN echo "--- FILE LISTING START ---" && ls -laR /app && echo "--- FILE LISTING END ---"
+# DEBUG: Verify Data folder exists and show contents
+RUN echo "=== CHECKING FOR DATA FOLDER ===" && \
+    if [ -d "/app/Data" ]; then \
+        echo "[OK] Data folder found at /app/Data"; \
+        echo "Contents:"; \
+        ls -lR /app/Data; \
+    else \
+        echo "[ERROR] Data folder NOT FOUND at /app/Data"; \
+        echo "Full directory listing:"; \
+        ls -laR /app; \
+    fi && \
+    echo "=== END DATA FOLDER CHECK ===" 
 
 # CRUCIAL: Train the model during build using the correct NumPy version
 # This re-pickles the model with the right dependencies
