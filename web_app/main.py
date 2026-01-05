@@ -16,12 +16,17 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Mount static files (CSS, JavaScript)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Get paths (absolute to work regardless of where app is started from)
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
+TEMPLATES_DIR = BASE_DIR / "templates"
 
-# Get paths
-BASE_DIR = Path(__file__).parent.parent
-MODEL_PATH = BASE_DIR / 'shelter_demand_model.joblib'
+# Mount static files (CSS, JavaScript) with absolute path
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+# Get paths to model
+ROOT_DIR = Path(__file__).resolve().parent.parent
+MODEL_PATH = ROOT_DIR / 'shelter_demand_model.joblib'
 
 # Load model
 try:
