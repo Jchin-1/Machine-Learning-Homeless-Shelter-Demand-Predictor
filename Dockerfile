@@ -17,12 +17,8 @@ RUN pip install --no-cache-dir "numpy<2.0.0"
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Explicitly copy the Data folder (try uppercase first, then fallback to lowercase)
-# NOTE: If your local folder is named "data" (lowercase), the uppercase COPY will fail
-# and we'll try the lowercase version as a fallback
-COPY Data /app/Data || true
-# Alternative: if data folder is lowercase, uncomment this line:
-# COPY data /app/Data || true
+# Explicitly copy the Data folder (required for model training)
+COPY Data /app/Data
 
 # Copy all other project files into the container
 COPY . .
