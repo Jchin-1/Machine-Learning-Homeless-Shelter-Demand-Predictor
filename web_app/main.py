@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, ConfigDict
 from typing import Optional
 import joblib
@@ -23,6 +24,9 @@ TEMPLATES_DIR = BASE_DIR / "templates"
 
 # Mount static files (CSS, JavaScript) with absolute path
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+# Initialize templates with absolute path
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 # Get paths to model
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -142,7 +146,7 @@ def get_live_prediction(date_str: str, sector: str, temp: float) -> dict:
 @app.get("/", tags=["Frontend"])
 async def get_index():
     """Serve the main HTML page"""
-    return FileResponse("templates/index.html")
+    return FileResponse(str(BASE_DIR / "templates" / "index.html"))
 
 @app.get("/api/info", tags=["Info"], response_model=SectorInfo)
 async def get_model_info():
