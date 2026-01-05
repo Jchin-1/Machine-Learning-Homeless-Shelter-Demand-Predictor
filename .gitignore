@@ -57,5 +57,5 @@ logs/
 Thumbs.db
 .DS_Store
 
-# Large files
-Data/
+# Note: Data/ folder is now included in git to support Docker builds
+# If files are too large, use Git LFS (see README for instructions)
